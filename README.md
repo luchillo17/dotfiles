@@ -1,0 +1,2 @@
+# dotfiles
+Nix ruled dotfiles

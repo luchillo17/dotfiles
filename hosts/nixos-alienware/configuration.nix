@@ -83,6 +83,7 @@
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.carlos = {
+    shell = pkgs.zsh;
     isNormalUser = true;
     description = "Carlos Esteban Lopez Jaramillo";
     extraGroups = [ "networkmanager" "wheel" ];
@@ -90,6 +91,7 @@
     #  thunderbird
     ];
   };
+  programs.zsh.enable = true;
 
   # Install firefox.
   programs.firefox.enable = true;

@@ -18,6 +18,20 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
+  
+  nixpkgs.config.allowUnfree = true;
+  home.packages = with pkgs; [
+    code-cursor
+    gitkraken
+    google-chrome
+  ];
+
+  home.shell.enableZshIntegration = true;
+
+  programs.ghostty = {
+    enable = true;
+    enableZshIntegration = true;
+  };
 
   programs.git = {
     enable = true;

@@ -1,6 +1,16 @@
-{ config, pkgs, stateVersion, user, ... }:
+{
+  config,
+  pkgs,
+  stateVersion,
+  user,
+  ...
+}:
 
 {
+  imports = [
+    ./modules
+  ];
+
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = user;
@@ -18,12 +28,14 @@
 
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
-  
+
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     code-cursor
     gitkraken
     google-chrome
+    nixfmt-rfc-style
+    nodejs_22
   ];
 
   home.shell.enableZshIntegration = true;
@@ -38,21 +50,4 @@
     userName = "Carlos Esteban Lopez Jaramillo";
     userEmail = "luchillo17@gmail.com";
   };
-
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
-    shellAliases = {
-      ll = "ls -l";
-    };
-    history.size = 10000;
-
-    oh-my-zsh = { # "ohMyZsh" without Home Manager
-      enable = true;
-      plugins = [ "git" "thefuck" ];
-      theme = "robbyrussell";
-    };
-  };
- }
+}

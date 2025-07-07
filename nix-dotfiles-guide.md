@@ -57,6 +57,8 @@ dotfiles/
 ├── home/
 │   ├── common.nix
 │   └── luchillo17@wsl.nix
+├── hosts
+│   └── my-nixos.nix
 ├── profiles/
 │   └── development.nix
 └── README.md
@@ -113,7 +115,7 @@ CD into `/etc/nixos/` and run `sudo nix flake init`, it will use the default tem
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
   };
 
   outputs = { self, nixpkgs }: {
@@ -138,15 +140,171 @@ Source: [NixOS with Flakes#Switch to flake.nix](https://nixos-and-flakes.thiscut
 
 #### Step 3: Move the flake.nix and dependencies to the dotfiles repo
 
-At this point you should have a minimal but working flake, now we're moving the config into the dotfiles repo.
+At this point you should have a minimal but working flake, now we're moving the config into the dotfiles repo, from inside the dotfiles folder run:
 
 ```bash
-
+cp /etc/nixos/* ./
 ```
+
+Then from this point on you have to use the flakes flag to tell Nix where to load the flake from (we copy and leave the originals there just to be safe):
+```bash
+sudo nixos-rebuild switch --flake .
+
+# If your hostname does not match any in the flake you might need to specify which configuration to apply
+# Please replace my-nixos with your hostname
+sudo nixos-rebuild switch --flake .#my-nixos
+```
+
+Now you should have a very basic and portable flakes based dotfiles, it is worth noting its currently specific to this device, that is because we copied the `configuration.nix` and `hardware-configuration.nix` which are setup for this host, the flake is general but now if you want to support multiple devices we need to delve into the `hosts` folder later in this guide.
+
+#### Step 4: Home Manager setup
+
+Although it is possible to install and manage everything in `configurations.nix`, it is less than ideal, as it is intended to handle OS level config, like bluetooth, wifi, peripherals and such, it is recommended to use Home Manager to handle user specific configs, like installing CLI utilities (think of `wget` or `htop`), programs (like Chrome or Ghostty) and dotfiles level configs (usually what you would put under `.bashrc` or `.zshrc` outside of Nix).
+
+There are multiple ways to handle Home Manager but we are going to use a semi-standalone way for 2 reasons:
+
+- Is more compatible with Non NixOX systems.
+- More important we want to decouple the NixOS switch run from Home Manager switch, the OS level one takes ages.
+
+First lets add the `home-manager` package to the `configurations.nix`:
+
+```nix
+{
+  # ...
+  nix.settings.experimental-features = [ "nix-command" "flakes"];
+  environment.systemPackages = with pkgs; [
+    home-manager # This line
+    git
+    vim
+    wget
+  ];
+  # ...
+}
+```
+
+It is hard to explain all the changes you need to make to enable a separate Home Manager config in the flake, so here is a peek at the `flake.nix` after enabling it, with a bit more advanced techniques:
+
+```nix
+{
+  description = "A very basic flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+
+    home-manager = {
+      url = "github:nix-community/home-manager/release-25.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, home-manager }@inputs:
+  let
+    user = "my-user";
+    host = "nixos-alienware";
+    system = "x86_64-linux";
+    stateVersion = "25.05";
+  in {
+
+    nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {
+      inherit system;
+      specialArgs = {
+        inherit system stateVersion;
+      };
+      modules = [
+        ./hosts/${host}/configuration.nix
+      ];
+    };
+
+    homeConfigurations.${user} = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.${system};
+      extraSpecialArgs = {
+        inherit inputs stateVersion user;
+      };
+      modules = [ ./home ];
+    };
+  };
+}
+```
+
+A few things to notice:
+- We are setting the nixos version to `25.05` everywhere, at the time of writing it is the latest stable OS version.
+- We are using variables to pass around repeated values, like the `home-manager`, `user`, `host`, `system` and `stateVersion`.
+- We are interpolating those variables in a few places with the `.${}` syntax.
+- The `specialArgs` and `extraSpecialArgs` are there to pass the inputs and variables down to the modules and submodules.
+- Inherit is syntax suggar for `{ inputs = inputs; }`.
+- Modules is how we tell the flake configs to load those files in that configuration.
+- Even though we are installing Home Manager in the host config, we are configuring it in a different config `homeConfigurations`, that is so we can run the home manager build by itself instead of rebuiling the whole OS.
+
+Then we have the `home.nix`, you will notice we are using again the `user` and `stateVersion` variables and setting/interpolating them in the proper places:
+
+```nix
+{ config, pkgs, stateVersion, user, ... }:
+
+{
+  # Home Manager needs a bit of information about you and the
+  # paths it should manage.
+  home.username = user;
+  home.homeDirectory = "/home/${user}";
+
+  # This value determines the Home Manager release that your
+  # configuration is compatible with. This helps avoid breakage
+  # when a new Home Manager release introduces backwards
+  # incompatible changes.
+  #
+  # You can update Home Manager without changing this value. See
+  # the Home Manager release notes for a list of state version
+  # changes in each release.
+  home.stateVersion = stateVersion;
+
+  # Let Home Manager install and manage itself.
+  programs.home-manager.enable = true;
+}
+```
+
+Now you can install stuff using the properties Home Manager offers, and have that be specific to your user (I think installed programs share the same nix storage but are only available to each user that is configured to have them installed, and the dotfiles of CLI utils and programs that support that would be user specific).
+
+Here is a minimal example with Zsh and OhMyZsh in the Home Manager way:
+
+```nix
+{
+  # ...
+  programs.zsh = {
+    enable = true;
+    enableCompletions = true;
+    autosuggestions.enable = true;
+    syntaxHighlighting.enable = true;
+
+    shellAliases = {
+      ll = "ls -l";
+      la = "ls -lah";
+    };
+    history.size = 10000;
+
+    oh-my-zsh = { # "ohMyZsh" without Home Manager
+      enable = true;
+      theme = "robbyrussell";
+      plugins = [ "git" "thefuck" ];
+    };
+  };
+}
+```
+
+Now you can run `home-manager switch --flake .#my-user` to install the home manager config in `home.nix`.
+
 
 ## 2. Adding hosts
 
 If you already have a flake based `dotfiles` repo, you need to know how to add hosts to it, at some point you'll want to have multiple machines where you share the same dotfiles.
+
+---
+
+### Step 1: Install Nix and Enable Flakes
+
+First, install Nix on your system using the [Determinate Systems Nix Installer](https://github.com/DeterminateSystems/nix-installer).
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
+```
 
 ---
 
@@ -267,16 +425,6 @@ home-manager switch --flake .#luchillo17@wsl
 ```
 
 **How it works:** The `--flake .#...` argument tells Home Manager to find the `flake.nix` file in the current working directory (`.`), and then apply the configuration specified after the `#`.
-
-After the command completes, open a new shell, and your tools and configurations will be ready.
-
----
-
-## 2. Advanced Usage
-
-### Integrating with a Full NixOS System
-
-On a NixOS machine, you can integrate your home-manager configuration directly into the system's `flake.nix` (usually at `/etc/nixos/flake.nix`).
 
 1. **Add your dotfiles repo as an input** to your NixOS flake. For local development, point to the path of your local clone. This avoids needing to commit every change.
 

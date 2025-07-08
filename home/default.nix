@@ -31,11 +31,12 @@
 
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
+    btop
     code-cursor
+    fira-code
     gitkraken
     google-chrome
     nixfmt-rfc-style
-    nodejs_22
   ];
 
   home.shell.enableZshIntegration = true;

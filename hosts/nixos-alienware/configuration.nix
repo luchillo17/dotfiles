@@ -107,20 +107,6 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  # List packages installed in system profile. To search, run:
-  # $ nix search wget
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  environment.systemPackages = with pkgs; [
-    home-manager
-    git
-    vim-full
-    wget
-  ];
-  environment.variables.EDITOR = "vim";
-
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;

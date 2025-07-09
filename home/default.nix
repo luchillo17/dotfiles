@@ -34,9 +34,13 @@
     btop
     code-cursor
     fira-code
+    git
+    git-extras
     gitkraken
     google-chrome
+    nix-zsh-completions
     nixfmt-rfc-style
+    python312Packages.pygments
   ];
 
   home.shell.enableZshIntegration = true;

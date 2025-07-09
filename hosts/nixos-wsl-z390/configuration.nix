@@ -29,23 +29,6 @@
   # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system.stateVersion = stateVersion; # Did you read the comment?
 
-  # Enable the Flakes feature and the accompanying new nix command-line tool
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
-  environment.systemPackages = with pkgs; [
-    # Flakes clones its dependencies through the git command,
-    # so git must be installed first
-    git
-    home-manager
-    nixfmt-rfc-style
-    vim-full
-    wget
-  ];
-  # Set the default editor to vim
-  environment.variables.EDITOR = "vim";
-
   # Settings for VSCode & Cursor
   programs.nix-ld = {
     enable = true;

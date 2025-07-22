@@ -24,4 +24,22 @@
     wget
   ];
   environment.variables.EDITOR = "vim";
+
+  # Mouse natural scrolling
+  services.libinput.mouse.naturalScrolling = true;
+
+  # Keyboard layouts - Latin American and US English
+  services.xserver.xkb = {
+    layout = "latam,us";
+  };
+
+  # Console keymap
+  console.keyMap = "la-latin1";
+
+  # Hibernate on power button press and lid close
+  services.logind = {
+    powerKey = "hibernate";
+    powerKeyLongPress = "poweroff";
+    lidSwitch = "suspend-then-hibernate";
+  };
 }

@@ -8,8 +8,8 @@
   users.defaultUserShell = pkgs.zsh;
 
   programs = {
+    pay-respects.enable = true;
     direnv.enable = true;
-    thefuck.enable = true;
     tmux.enable = true;
     vim.enable = true;
 
@@ -20,6 +20,10 @@
       syntaxHighlighting.enable = true;
 
       histSize = 10000;
+
+      shellInit = ''
+        eval "$(pay-respects zsh)"
+      '';
 
       setOptions = [
         "HIST_IGNORE_ALL_DUPS"
@@ -44,7 +48,6 @@
           "jsontools"
           "sudo"
           "systemadmin"
-          "thefuck"
           "themes"
           "tmux"
           "z"

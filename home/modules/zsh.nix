@@ -1,8 +1,8 @@
 { config, pkgs, ... }:
 {
   programs = {
+    pay-respects.enable = true;
     direnv.enable = true;
-    thefuck.enable = true;
     tmux.enable = true;
     vim.enable = true;
 
@@ -13,6 +13,10 @@
       syntaxHighlighting.enable = true;
 
       history.ignoreAllDups = true;
+
+      initContent = ''
+        eval "$(pay-respects zsh)"
+      '';
 
       oh-my-zsh = {
         enable = true;
@@ -37,7 +41,6 @@
           "pm2"
           "sudo"
           "systemadmin"
-          "thefuck"
           "themes"
           "tmux"
           "vscode"

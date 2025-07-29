@@ -2,11 +2,11 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.05";
+      url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -24,7 +24,7 @@
       host = "nixos-alienware";
       wslHost = "nixos-wsl-z390";
       system = "x86_64-linux";
-      stateVersion = "25.05";
+      stateVersion = "25.11";
     in
     {
       nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {

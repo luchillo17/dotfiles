@@ -3,6 +3,7 @@
   imports = [
     ./bash.nix
     ./prisma.nix
+    ./wayland.nix
     ./zsh.nix
   ];
 

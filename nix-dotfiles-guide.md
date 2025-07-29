@@ -147,6 +147,7 @@ cp /etc/nixos/* ./
 ```
 
 Then from this point on you have to use the flakes flag to tell Nix where to load the flake from (we copy and leave the originals there just to be safe):
+
 ```bash
 sudo nixos-rebuild switch --flake .
 
@@ -227,6 +228,7 @@ It is hard to explain all the changes you need to make to enable a separate Home
 ```
 
 A few things to notice:
+
 - We are setting the nixos version to `25.05` everywhere, at the time of writing it is the latest stable OS version.
 - We are using variables to pass around repeated values, like the `home-manager`, `user`, `host`, `system` and `stateVersion`.
 - We are interpolating those variables in a few places with the `.${}` syntax.
@@ -290,7 +292,6 @@ Here is a minimal example with Zsh and OhMyZsh in the Home Manager way:
 ```
 
 Now you can run `home-manager switch --flake .#my-user` to install the home manager config in `home.nix`.
-
 
 ## 2. Adding hosts
 
@@ -370,7 +371,7 @@ The `flake.nix` file is the heart of your configuration. It defines your depende
 { pkgs, ... }: {
   home.username = "luchillo17";
   home.homeDirectory = "/home/luchillo17";
-  home.stateVersion = "23.11"; // Use the current NixOS version
+  home.stateVersion = "25.05"; // Use the current NixOS version
 
   # Let home-manager manage itself
   programs.home-manager.enable = true;

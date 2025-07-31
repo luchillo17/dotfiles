@@ -9,6 +9,7 @@
   config,
   lib,
   pkgs,
+  user,
   stateVersion,
   ...
 }:
@@ -19,7 +20,7 @@
   ];
 
   wsl.enable = true;
-  wsl.defaultUser = "carlos";
+  wsl.defaultUser = user;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

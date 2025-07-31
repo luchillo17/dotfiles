@@ -2,6 +2,7 @@
 {
   imports = [
     ./bash.nix
+    ./docker.nix
     ./prisma.nix
     ./wayland.nix
     ./zsh.nix

@@ -5,6 +5,8 @@
 {
   config,
   pkgs,
+  lib,
+  user,
   stateVersion,
   ...
 }:
@@ -89,10 +91,10 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with 'passwd'.
-  users.users.carlos = {
+  users.users.${user} = {
     isNormalUser = true;
     description = "Carlos Esteban Lopez Jaramillo";
-    extraGroups = [
+    extraGroups = lib.mkBefore [
       "networkmanager"
       "wheel"
     ];

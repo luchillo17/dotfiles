@@ -9,6 +9,11 @@
       url = "github:nix-community/home-manager/master";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    compose2nix = {
+      url = "github:aksiksi/compose2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -17,6 +22,7 @@
       nixpkgs,
       nixos-wsl,
       home-manager,
+      compose2nix,
       ...
     }:
     let
@@ -30,7 +36,12 @@
       nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system stateVersion;
+          inherit
+            user
+            system
+            stateVersion
+            compose2nix
+            ;
         };
         modules = [
           ./hosts/${host}/configuration.nix
@@ -40,7 +51,7 @@
       nixosConfigurations.${wslHost} = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system stateVersion;
+          inherit system stateVersion compose2nix;
         };
         modules = [
           nixos-wsl.nixosModules.default

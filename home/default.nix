@@ -31,11 +31,7 @@
 
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
-    btop
     code-cursor
-    fira-code
-    git
-    git-extras
     gitkraken
     google-chrome
     nix-zsh-completions

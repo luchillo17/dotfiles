@@ -3,10 +3,12 @@
   ...
 }:
 {
-  environment.systemPackages = with pkgs; [
-    openssl
-    # prisma-engines
-  ];
+  environment.systemPackages =
+    with pkgs;
+    lib.mkAfter [
+      openssl
+      # prisma-engines
+    ];
 
   environment.variables = {
     # PRISMA_QUERY_ENGINE_LIBRARY = "${pkgs.prisma-engines}/lib/libquery_engine.node";

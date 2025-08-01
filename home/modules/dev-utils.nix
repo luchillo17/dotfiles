@@ -3,12 +3,18 @@
   home.packages = with pkgs; [
     btop
     fira-code
-    gcc
     git
     git-extras
-    gnumake
     nix-zsh-completions
     nixfmt-rfc-style
     python312Packages.pygments
+
+    # C / C++
+    cmake
+    extra-cmake-modules
+    gcc
+    glibc
+    gnumake
+    libgcc
   ];
 }

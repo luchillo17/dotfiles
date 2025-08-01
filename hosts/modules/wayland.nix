@@ -4,7 +4,9 @@
   environment.sessionVariables.NIXOS_OZONE_WL = "1";
 
   # Enable Wine support for Wayland
-  environment.systemPackages = with pkgs; [
-    wineWowPackages.stable
-  ];
+  environment.systemPackages =
+    with pkgs;
+    lib.mkAfter [
+      wineWowPackages.stable
+    ];
 }

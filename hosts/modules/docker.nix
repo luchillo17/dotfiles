@@ -16,8 +16,10 @@
 
   users.users.${user}.extraGroups = lib.mkAfter [ "docker" ];
 
-  environment.systemPackages = with pkgs; [
-    compose2nix.packages.${system}.default
-    docker-compose
-  ];
+  environment.systemPackages =
+    with pkgs;
+    lib.mkAfter [
+      compose2nix.packages.${system}.default
+      docker-compose
+    ];
 }

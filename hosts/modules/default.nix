@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ./bash.nix
+    ./compat.nix
     ./docker.nix
     ./prisma.nix
     ./wayland.nix
@@ -14,17 +14,19 @@
     "nix-command"
     "flakes"
   ];
-  environment.systemPackages = with pkgs; [
-    # Flakes clones its dependencies through the git command,
-    # so git must be installed first
-    bintools
-    git
-    git-extras
-    home-manager
-    nixfmt-rfc-style
-    python312Packages.pygments
-    wget
-  ];
+  environment.systemPackages =
+    with pkgs;
+    lib.mkBefore [
+      # Flakes clones its dependencies through the git command,
+      # so git must be installed first
+      bintools
+      git
+      git-extras
+      home-manager
+      nixfmt-rfc-style
+      python312Packages.pygments
+      wget
+    ];
   environment.variables.EDITOR = "vim";
 
   # Mouse natural scrolling

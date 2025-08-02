@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   pkgs,
   stateVersion,
@@ -32,6 +33,7 @@
   nixpkgs.config.allowUnfree = true;
   home.packages = with pkgs; [
     code-cursor
+    file
     gitkraken
     google-chrome
     nix-zsh-completions
@@ -51,4 +53,28 @@
     userName = "Carlos Esteban Lopez Jaramillo";
     userEmail = "luchillo17@gmail.com";
   };
-}
+
+  # Fix all sandboxed apps based on Chromium or Electron
+  home.activation.fixChromeSandbox = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    # Replace with actual path to chrome-sandbox
+    SANDBOX_PATH=$(find /nix/store -name chrome-sandbox | grep chromium || true)
+    if [ -n "$SANDBOX_PATH" ]; then
+      echo "Patching chrome-sandbox permissions..."
+      sudo chown root:root "$SANDBOX_PATH"
+      sudo chmod 4755 "$SANDBOX_PATH"
+    fi
+  '';
+  home.activation.fixAllSandboxes = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    echo "Scanning for chrome-sandbox binaries..."
+
+    FILE_CMD=${pkgs.file}/bin/file
+
+    find /nix/store -type f -name '*sandbox' | while read SANDBOX; do
+      if $FILE_CMD "$SANDBOX" | grep -q 'ELF'; then
+        echo "Patching: $SANDBOX"
+        /usr/bin/sudo chown root:root "$SANDBOX"
+        /usr/bin/sudo chmod 4755 "$SANDBOX"
+      fi
+    done
+  '';
+ }

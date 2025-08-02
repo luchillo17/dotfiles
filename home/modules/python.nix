@@ -13,6 +13,6 @@
       export LD_LIBRARY_PATH=$NIX_LD_LIBRARY_PATH
       exec ${pkgs.python311}/bin/python "$@"
     '')
-    python311Packages.python-lsp-server
+    # python311Packages.python-lsp-server
   ];
 }

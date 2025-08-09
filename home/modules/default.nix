@@ -8,7 +8,7 @@
     ./nodejs.nix
     ./postgres.nix
     ./python.nix
-    ./slack.nix
+    ./social-apps.nix
     ./ssh.nix
     ./zsh.nix
   ];

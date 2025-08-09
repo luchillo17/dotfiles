@@ -1,1 +1,1 @@
-sudo nix flake update
+nix flake update

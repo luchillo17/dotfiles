@@ -12,6 +12,11 @@
     ./modules
   ];
 
+  # Enable nix-command and flakes for non-NixOS systems
+  xdg.configFile."nix/nix.conf".text = ''
+    experimental-features = nix-command flakes
+  '';
+
   # Home Manager needs a bit of information about you and the
   # paths it should manage.
   home.username = user;
@@ -55,7 +60,7 @@
   };
 
   # Fix all sandboxed apps based on Chromium or Electron
-  home.activation.fixChromeSandbox = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.fixChromeSandbox = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     # Replace with actual path to chrome-sandbox
     SANDBOX_PATH=$(find /nix/store -name chrome-sandbox | grep chromium || true)
     if [ -n "$SANDBOX_PATH" ]; then
@@ -64,7 +69,7 @@
       sudo chmod 4755 "$SANDBOX_PATH"
     fi
   '';
-  home.activation.fixAllSandboxes = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  home.activation.fixAllSandboxes = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     echo "Scanning for chrome-sandbox binaries..."
 
     FILE_CMD=${pkgs.file}/bin/file
@@ -77,4 +82,4 @@
       fi
     done
   '';
- }
+}

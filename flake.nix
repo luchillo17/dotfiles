@@ -51,7 +51,12 @@
       nixosConfigurations.${wslHost} = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = {
-          inherit system stateVersion compose2nix;
+          inherit
+            user
+            system
+            stateVersion
+            compose2nix
+            ;
         };
         modules = [
           nixos-wsl.nixosModules.default

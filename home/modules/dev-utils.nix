@@ -16,5 +16,10 @@
     glibc
     gnumake
     libgcc
+    stdenv.cc.cc
   ];
+
+  home.sessionVariables = {
+    LD_LIBRARY_PATH = "${pkgs.lib.makeLibraryPath [ pkgs.stdenv.cc.cc.lib ]}:$LD_LIBRARY_PATH";
+  };
 }

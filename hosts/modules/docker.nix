@@ -2,7 +2,6 @@
   pkgs,
   lib,
   user,
-  compose2nix,
   system,
   ...
 }:
@@ -19,7 +18,6 @@
   environment.systemPackages =
     with pkgs;
     lib.mkAfter [
-      compose2nix.packages.${system}.default
       docker-compose
     ];
 }

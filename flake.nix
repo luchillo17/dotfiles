@@ -2,16 +2,11 @@
   description = "A very basic flake";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.05";
 
     home-manager = {
-      url = "github:nix-community/home-manager/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    compose2nix = {
-      url = "github:aksiksi/compose2nix";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -22,7 +17,6 @@
       nixpkgs,
       nixos-wsl,
       home-manager,
-      compose2nix,
       ...
     }:
     let
@@ -30,7 +24,7 @@
       host = "nixos-alienware";
       wslHost = "nixos-wsl-z390";
       system = "x86_64-linux";
-      stateVersion = "25.11";
+      stateVersion = "25.05";
     in
     {
       nixosConfigurations.${host} = nixpkgs.lib.nixosSystem {
@@ -40,7 +34,6 @@
             user
             system
             stateVersion
-            compose2nix
             ;
         };
         modules = [
@@ -55,7 +48,6 @@
             user
             system
             stateVersion
-            compose2nix
             ;
         };
         modules = [

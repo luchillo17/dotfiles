@@ -12,6 +12,10 @@
     ./modules
   ];
 
+
+  manual.html.enable = false;
+  manual.json.enable = false;
+  
   # Enable nix-command and flakes for non-NixOS systems
   xdg.configFile."nix/nix.conf".text = ''
     experimental-features = nix-command flakes

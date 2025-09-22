@@ -5,6 +5,9 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.05";
 
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -16,6 +19,7 @@
       self,
       nixpkgs,
       nixos-wsl,
+      sops-nix,
       home-manager,
       ...
     }:
@@ -38,6 +42,7 @@
         };
         modules = [
           ./hosts/${host}/configuration.nix
+          sops-nix.nixosModules.sops
         ];
       };
 
@@ -53,6 +58,7 @@
         modules = [
           nixos-wsl.nixosModules.default
           ./hosts/${wslHost}/configuration.nix
+          sops-nix.nixosModules.sops
         ];
       };
 

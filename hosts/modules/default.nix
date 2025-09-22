@@ -20,11 +20,13 @@
       # Flakes clones its dependencies through the git command,
       # so git must be installed first
       bintools
+      coreutils-full
       git
       git-extras
       home-manager
       nixfmt-rfc-style
       python312Packages.pygments
+      sudo
       wget
     ];
   environment.variables.EDITOR = "vim";

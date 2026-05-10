@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if command -v mise >/dev/null 2>&1; then
+  echo "mise already installed: $(mise --version)"
+  exit 0
+fi
+
+echo "Installing mise..."
+
+curl https://mise.run | sh
+
+MISE_BIN="$HOME/.local/bin/mise"
+
+if [[ ! -x "$MISE_BIN" ]]; then
+  echo "mise was not found at $MISE_BIN after installation."
+  exit 1
+fi
+
+echo "mise installed: $("$MISE_BIN" --version)"

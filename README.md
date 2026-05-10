@@ -283,20 +283,38 @@ cloud-credentials.json
 
 ## Package and runtime strategy
 
-System-level packages are tracked as lists under `packages/`.
+Package lists are organized by scope under `packages/`.
+
+The package model is layered:
+
+- `packages/common/`: packages intended for every machine.
+- `packages/profiles/desktop/`: packages intended for Ubuntu desktop/workstation machines.
+- `packages/profiles/server/`: packages intended for VPS/headless server machines.
+- `packages/devices/`: packages intended for one specific hostname.
+
+A machine should be configured from these layers:
+
+- common
+- selected profile
+- optional device-specific additions
 
 Examples:
 
-```text
-packages/apt.txt
-packages/snap.txt
-packages/flatpak.txt
-packages/npm-global.txt
-packages/pipx.txt
-packages/cargo.txt
-packages/vscode-extensions.txt
-packages/cursor-extensions.txt
-```
+- Ubuntu desktop development machine: common + desktop + device-specific additions.
+- VPS server: common + server + device-specific additions.
+
+Package files may include:
+
+- `apt.txt`
+- `snap.txt`
+- `flatpak.txt`
+- `npm-global.txt`
+- `pipx.txt`
+- `cargo.txt`
+- `vscode-extensions.txt`
+- `cursor-extensions.txt`
+
+Package lists should be curated intent, not raw snapshots of the current machine.
 
 Language and runtime versions should be managed with `mise`.
 

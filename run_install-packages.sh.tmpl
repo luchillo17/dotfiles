@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+DOTFILES_PROFILE="{{ .profile }}" \
+DOTFILES_HOSTNAME="$(hostname)" \
+"{{ .chezmoi.sourceDir }}/scripts/install-packages.sh"

@@ -26,12 +26,12 @@ This device uses the layered package model:
 
 Keep this device package list small and intentional.
 
-## Docker
+## Docker Engine
 
-This device opts into Docker Engine through local chezmoi data:
+This device intentionally installs Docker Engine.
 
-```ini
-dockerEngine = true
-```
+The opt-in marker is:
 
-Docker Engine is not part of the generic server profile.
+packages/devices/ewlqemyb.vm/docker-engine.enabled
+
+Docker Engine is device-specific here, not part of the generic server profile.

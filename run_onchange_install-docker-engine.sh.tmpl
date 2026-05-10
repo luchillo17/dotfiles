@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+DEVICE_DIR="{{ .chezmoi.sourceDir }}/packages/devices/{{ .chezmoi.hostname }}"
+
+if [[ ! -f "$DEVICE_DIR/docker-engine.enabled" ]]; then
+  exit 0
+fi
+
 "{{ .chezmoi.sourceDir }}/scripts/install-docker-engine.sh"

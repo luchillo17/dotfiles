@@ -12,7 +12,3 @@ scripts/
 {{- if ne .profile "desktop" }}
 install-docker-desktop.sh.tmpl
 {{- end }}
-
-{{- if not (index . "dockerEngine" | default false) }}
-install-docker-engine.sh
-{{- end }}

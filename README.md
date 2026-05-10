@@ -58,16 +58,25 @@ sudo apt update
 sudo apt install -y git curl ca-certificates
 ```
 
-Install and initialize with `chezmoi`:
+Install `chezmoi` globally for the current user:
 
 ```bash
-sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply luchillo17
+mkdir -p ~/.local/bin
+sh -c "$(curl -fsLS get.chezmoi.io)" -- -b "$HOME/.local/bin"
 ```
 
-Then run the bootstrap script:
+Make sure `~/.local/bin` is in your `PATH`:
 
 ```bash
-~/.local/share/chezmoi/scripts/bootstrap.sh
+chezmoi --version
+```
+
+If `chezmoi` is not found, add `~/.local/bin` to your shell `PATH`.
+
+Initialize and apply this dotfiles repo:
+
+```bash
+chezmoi init --apply luchillo17
 ```
 
 Review scripts before running them on a new machine.

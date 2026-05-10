@@ -1,4 +1,4 @@
-# dotfiles
+# Dotfiles
 
 Modern Ubuntu development environment setup for `luchillo17`.
 
@@ -62,13 +62,6 @@ Install and initialize with `chezmoi`:
 
 ```bash
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply luchillo17
-```
-
-Or clone manually:
-
-```bash
-git clone https://github.com/luchillo17/dotfiles.git ~/.local/share/chezmoi
-chezmoi apply
 ```
 
 Then run the bootstrap script:

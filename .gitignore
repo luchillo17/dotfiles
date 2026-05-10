@@ -1,0 +1,32 @@
+# OS / desktop noise
+.DS_Store
+Thumbs.db
+.Trash-*
+.directory
+
+# Vim/swap/temp noise
+*.swp
+*.swo
+*~
+
+# Logs / temp
+*.log
+*.tmp
+*.bak
+*.old
+tmp/
+temp/
+
+# Secrets / local-only files
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.crt
+secrets.*
+*.local
+
+# Machine-specific chezmoi config
+.chezmoi.toml
+.chezmoi.toml.tmpl

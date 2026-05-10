@@ -1,0 +1,10 @@
+{
+  // Chezmoi `.tmpl` files are plain text by extension; map each shape to the
+  // real language for syntax highlighting. Extend this object as templates grow.
+  "files.associations": {
+    "dot_zshrc.tmpl": "shellscript",
+    "**/*.sh.tmpl": "shellscript",
+    // No built-in "gitconfig" language id; "ini" highlights sections/keys well.
+    "dot_gitconfig.tmpl": "ini"
+  }
+}

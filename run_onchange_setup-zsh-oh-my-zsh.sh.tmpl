@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+install_zsh() {
+  if command -v zsh >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if command -v apt-get >/dev/null 2>&1; then
+    sudo apt-get update
+    sudo apt-get install -y zsh git curl
+  else
+    echo "zsh is not installed and apt-get is not available."
+    exit 1
+  fi
+}
+
+ensure_zsh_in_shells() {
+  local zsh_path
+  zsh_path="$(command -v zsh)"
+
+  if ! grep -qxF "$zsh_path" /etc/shells; then
+    echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null
+  fi
+}
+
+set_zsh_as_default_shell() {
+  local zsh_path
+  zsh_path="$(command -v zsh)"
+
+  local current_shell
+  current_shell="$(getent passwd "$USER" | cut -d: -f7)"
+
+  if [[ "$current_shell" != "$zsh_path" ]]; then
+    echo "Changing default shell for $USER to $zsh_path"
+    chsh -s "$zsh_path" "$USER"
+  else
+    echo "Default shell is already $zsh_path"
+  fi
+}
+
+install_oh_my_zsh() {
+  if [[ ! -d "$HOME/.oh-my-zsh" ]]; then
+    echo "Installing Oh My Zsh..."
+    CHSH=no RUNZSH=no KEEP_ZSHRC=yes sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+  else
+    echo "Oh My Zsh already installed."
+  fi
+}
+
+clone_if_missing() {
+  local repo="$1"
+  local dir="$2"
+
+  if [[ ! -d "$dir" ]]; then
+    git clone "$repo" "$dir"
+  fi
+}
+
+install_oh_my_zsh_plugins() {
+  local zsh_custom_dir
+  zsh_custom_dir="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+  mkdir -p "$zsh_custom_dir/plugins"
+
+  clone_if_missing "https://github.com/zsh-users/zsh-autosuggestions" "$zsh_custom_dir/plugins/zsh-autosuggestions"
+  clone_if_missing "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$zsh_custom_dir/plugins/zsh-syntax-highlighting"
+  clone_if_missing "https://github.com/zsh-users/zsh-completions.git" "$zsh_custom_dir/plugins/zsh-completions"
+}
+
+install_zsh
+ensure_zsh_in_shells
+install_oh_my_zsh
+install_oh_my_zsh_plugins
+set_zsh_as_default_shell
+
+echo "Zsh + Oh My Zsh setup complete."
+echo "Open a new terminal session for the default shell change to take effect."

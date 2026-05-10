@@ -1,0 +1,104 @@
+# Managed by chezmoi.
+# Profile: {{ .profile }}
+
+# Path to Oh My Zsh.
+export ZSH="$HOME/.oh-my-zsh"
+
+# Theme
+ZSH_THEME="robbyrussell"
+
+# Oh My Zsh behavior
+HYPHEN_INSENSITIVE="true"
+COMPLETION_WAITING_DOTS="true"
+
+# Update frequency in days.
+zstyle ':omz:update' frequency 13
+
+# Completion paths for custom plugins.
+if [[ -d "${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src" ]]; then
+  fpath+=("${ZSH_CUSTOM:-$ZSH/custom}/plugins/zsh-completions/src")
+fi
+
+plugins=(
+  git
+  gitfast
+  common-aliases
+  command-not-found
+  colorize
+  direnv
+  dotenv
+  docker
+  docker-compose
+  jsontools
+  kubectl
+  helm
+  npm
+  sudo
+  systemadmin
+  terraform
+  tmux
+  ubuntu
+  vscode
+  yarn
+  z
+  zsh-completions
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+if [[ -r "$ZSH/oh-my-zsh.sh" ]]; then
+  source "$ZSH/oh-my-zsh.sh"
+fi
+
+# History
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000
+SAVEHIST=10000
+
+setopt append_history
+setopt share_history
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt inc_append_history
+
+# Editor
+export EDITOR="${EDITOR:-vim}"
+export VISUAL="${VISUAL:-$EDITOR}"
+
+# PATH
+export PATH="$HOME/.local/bin:$PATH"
+
+# WSL-specific defaults
+{{- if eq .profile "wsl" }}
+if command -v wslview >/dev/null 2>&1; then
+  export BROWSER="${BROWSER:-wslview}"
+fi
+{{- end }}
+
+# Tool initializers
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate zsh)"
+fi
+
+if command -v zoxide >/dev/null 2>&1; then
+  eval "$(zoxide init zsh)"
+fi
+
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
+
+if command -v thefuck >/dev/null 2>&1; then
+  eval "$(thefuck --alias)"
+fi
+
+# Backward-compatible local exports.
+if [[ -f "$HOME/.sh_exports" ]]; then
+  source "$HOME/.sh_exports"
+fi
+
+# Local machine overrides, not managed by chezmoi.
+if [[ -r "$HOME/.zshrc.local" ]]; then
+  source "$HOME/.zshrc.local"
+fi

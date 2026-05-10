@@ -1,0 +1,10 @@
+README.md
+LICENSE.md
+docs/
+packages/
+scripts/
+.editorconfig
+.gitattributes
+.gitignore
+.prettierrc
+.prettierignore

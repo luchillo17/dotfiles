@@ -14,7 +14,7 @@ Do not commit private keys, provider credentials, IP-sensitive notes, or secrets
 
 ## OS
 
-Ubuntu 22.04.5 LTS.
+Ubuntu 26.04 LTS.
 
 ## Package policy
 

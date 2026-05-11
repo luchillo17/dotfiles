@@ -3,4 +3,5 @@ curl
 direnv
 git
 gnupg
+tmux
 zsh

@@ -25,8 +25,16 @@ temp/
 *.p12
 *.crt
 secrets.*
+!docs/secrets.md
 *.local
 
 # Machine-specific chezmoi config
 .chezmoi.toml
 .chezmoi.toml.tmpl
+
+# App deployment secrets
+apps/**/.env
+apps/**/.env.*
+apps/**/.db.env
+apps/**/secrets/
+*.secret

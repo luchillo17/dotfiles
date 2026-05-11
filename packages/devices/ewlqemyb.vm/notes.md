@@ -36,16 +36,16 @@ packages/devices/ewlqemyb.vm/docker-engine.enabled
 
 Docker Engine is device-specific here, not part of the generic server profile.
 
-## Secrets
+## Secrets provider
 
-This device uses LastPass for deployment secrets.
+This device declares its secrets provider through a marker file under:
 
-Marker:
+packages/devices/ewlqemyb.vm/
 
-- packages/devices/ewlqemyb.vm/secrets-provider.lastpass.enabled
+Supported marker examples:
 
-Required package:
+- secrets-provider.lastpass.enabled
+- secrets-provider.1password.enabled
+- secrets-provider.env.enabled
 
-- lastpass-cli
-
-Real secrets stay in LastPass and are not committed to this repository.
+Real secrets are not committed to this repository.

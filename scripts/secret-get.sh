@@ -30,11 +30,7 @@ detect_provider() {
   fi
 
   echo "No secrets provider configured for hostname: ${HOSTNAME_VALUE:-unknown}" >&2
-  echo "Expected one of these marker files under:" >&2
-  echo "$DEVICE_DIR" >&2
-  echo "- secrets-provider.lastpass.enabled" >&2
-  echo "- secrets-provider.1password.enabled" >&2
-  echo "- secrets-provider.env.enabled" >&2
+  echo "Expected one provider marker under: $DEVICE_DIR" >&2
   exit 1
 }
 
@@ -44,11 +40,38 @@ case "$PROVIDER" in
   lastpass)
     if ! command -v lpass >/dev/null 2>&1; then
       echo "Missing LastPass CLI: lpass" >&2
-      echo "Install package: lastpass-cli" >&2
       exit 1
     fi
 
-    lpass show --field "$KEY" "dotfiles/$APP"
+    ITEM="dotfiles/$APP"
+
+    if VALUE="$(lpass show --field "$KEY" "$ITEM" 2>/dev/null)"; then
+      if [[ -n "$VALUE" ]]; then
+        printf '%s\n' "$VALUE"
+        exit 0
+      fi
+    fi
+
+    if VALUE="$(lpass show --notes "$ITEM" \
+      | awk -v key="$KEY" '
+          index($0, key "=") == 1 {
+            sub("^[^=]*=", "")
+            print
+            found = 1
+            exit
+          }
+          END {
+            if (!found) exit 1
+          }
+        ')"; then
+      printf '%s\n' "$VALUE"
+      exit 0
+    fi
+
+    echo "Missing secret '$KEY' in LastPass item '$ITEM'." >&2
+    echo "Expected either a custom field named '$KEY' or a note line like:" >&2
+    echo "$KEY=value" >&2
+    exit 1
     ;;
 
   1password|onepassword)

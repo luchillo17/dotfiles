@@ -3,5 +3,6 @@ curl
 direnv
 git
 gnupg
+rsync
 tmux
 zsh

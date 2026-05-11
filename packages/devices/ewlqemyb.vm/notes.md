@@ -35,3 +35,17 @@ The opt-in marker is:
 packages/devices/ewlqemyb.vm/docker-engine.enabled
 
 Docker Engine is device-specific here, not part of the generic server profile.
+
+## Secrets
+
+This device uses LastPass for deployment secrets.
+
+Marker:
+
+- packages/devices/ewlqemyb.vm/secrets-provider.lastpass.enabled
+
+Required package:
+
+- lastpass-cli
+
+Real secrets stay in LastPass and are not committed to this repository.

@@ -1,6 +1,7 @@
 ca-certificates
 curl
 direnv
+gh
 git
 gnupg
 rsync

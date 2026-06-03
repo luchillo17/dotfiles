@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+export PATH="$HOME/.local/bin:$PATH"
+
+if ! command -v mise >/dev/null 2>&1; then
+  echo "mise not installed; skipping corepack enable."
+  exit 0
+fi
+
+if ! mise which node >/dev/null 2>&1; then
+  echo "Node not installed via mise; skipping corepack enable."
+  exit 0
+fi
+
+NODE_ROOT="$(mise where node)"
+
+if [[ ! -e "$NODE_ROOT/bin/corepack" ]]; then
+  echo "corepack not found under $NODE_ROOT; skipping."
+  exit 0
+fi
+
+export PATH="$NODE_ROOT/bin:$PATH"
+corepack enable
+corepack prepare pnpm@latest --activate
+echo "corepack enabled for $(node --version) with default pnpm $(pnpm --version)"

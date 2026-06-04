@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# AI assisted development
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -42,6 +43,17 @@ is_apt_package_installed() {
   dpkg-query -W -f='${Status}' "$package" 2>/dev/null | grep -q "install ok installed"
 }
 
+run_device_apt_repo_setup() {
+  local script="$PACKAGES_DIR/devices/$HOSTNAME_VALUE/setup-apt-repos.sh"
+
+  if [[ -z "$HOSTNAME_VALUE" || ! -f "$script" ]]; then
+    return 0
+  fi
+
+  echo "Running device apt repo setup: $script"
+  bash "$script"
+}
+
 install_apt_packages() {
   if ! command -v apt-get >/dev/null 2>&1; then
     echo "Skipping apt packages: apt-get not found."
@@ -70,6 +82,8 @@ install_apt_packages() {
 
   echo "Installing missing apt packages:"
   printf '  %s\n' "${missing[@]}"
+
+  run_device_apt_repo_setup
 
   sudo apt-get update
   sudo apt-get install -y "${missing[@]}"

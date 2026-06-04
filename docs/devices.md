@@ -17,7 +17,7 @@ Templates and scripts read `{{ .profile }}` (and optional template data) from `~
 
 Supported list files in each layer match `packages/devices/README.md` (`apt.txt`, `snap.txt`, and so on).
 
-**In this repo right now:** `packages/common/`, `packages/profiles/desktop/`, and `packages/devices/ewlqemyb.vm/` exist. There are no `packages/profiles/wsl/` or `packages/profiles/server/` directories yet; add them when you want profile-specific packages for those machines—the install script will use them automatically once the folder exists and `DOTFILES_PROFILE` matches.
+**In this repo right now:** `packages/common/`, `packages/profiles/desktop/`, `packages/devices/PW0NL7YE/`, and `packages/devices/ewlqemyb.vm/` exist. There are no `packages/profiles/wsl/` or `packages/profiles/server/` directories yet; add them when you want profile-specific packages for those machines—the install script will use them automatically once the folder exists and `DOTFILES_PROFILE` matches.
 
 ## Profiles
 
@@ -75,9 +75,10 @@ Per-host details (provider, access notes, Docker intent) should stay in **`packa
 | Hostname          | Profile  | Notes                                                        |
 | ----------------- | -------- | ------------------------------------------------------------ |
 | `DESKTOP-LL0IH7K` | `wsl`    | WSL2 Ubuntu dev shell; Docker via Docker Desktop on Windows. |
+| `PW0NL7YE`        | `wsl`    | WSL2 Ubuntu dev shell; Docker via Docker Desktop on Windows. |
 | `ewlqemyb.vm`     | `server` | See `packages/devices/ewlqemyb.vm/notes.md`.                 |
 
-Do not commit secrets, private keys, provider credentials, client data, or sensitive infrastructure in device notes.
+Do not commit secrets, private keys, provider credentials, client or employer names, client data, or sensitive infrastructure in device notes.
 
 ## Device-specific packages
 

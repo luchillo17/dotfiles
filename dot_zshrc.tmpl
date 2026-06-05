@@ -74,6 +74,50 @@ export PATH="$HOME/.local/bin:$PATH"
 if command -v wslview >/dev/null 2>&1; then
   export BROWSER="${BROWSER:-wslview}"
 fi
+
+# SSH agent: keychain starts ssh-agent and reloads persisted keys on login.
+if command -v keychain >/dev/null 2>&1; then
+  keychain_keys_file="${XDG_CONFIG_HOME:-$HOME/.config}/ssh/keychain-keys"
+  keychain_keys=()
+
+  if [[ -r "$keychain_keys_file" ]]; then
+    while IFS= read -r key || [[ -n "$key" ]]; do
+      [[ -z "$key" || "$key" == \#* ]] && continue
+      [[ -f "$key" ]] && keychain_keys+=("$key")
+    done < "$keychain_keys_file"
+  fi
+
+  if (( ${#keychain_keys[@]} > 0 )); then
+    eval "$(keychain --eval --quiet --agents ssh "${keychain_keys[@]}")"
+  else
+    eval "$(keychain --eval --quiet --agents ssh)"
+  fi
+
+  ssh-add() {
+    if (( $# == 0 )) || [[ "$1" == -* ]]; then
+      command ssh-add "$@"
+      return $?
+    fi
+
+    command ssh-add "$@" || return $?
+
+    local key abs_key
+    mkdir -p "$(dirname "$keychain_keys_file")"
+    touch "$keychain_keys_file"
+    for key in "$@"; do
+      abs_key="${key:A}"
+      if ! grep -qxF "$abs_key" "$keychain_keys_file" 2>/dev/null; then
+        echo "$abs_key" >> "$keychain_keys_file"
+      fi
+    done
+  }
+fi
+
+# Stable path for dev containers that mount ~/.ssh/agent.sock.
+if [[ -n "${SSH_AUTH_SOCK:-}" ]]; then
+  mkdir -p "$HOME/.ssh"
+  ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/agent.sock"
+fi
 {{- end }}
 
 # Tool initializers

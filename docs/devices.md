@@ -30,6 +30,7 @@ Use when Ubuntu runs under WSL2 and you treat it as a dev shell with Windows pro
 - Shell: `dot_zshrc.tmpl` enables WSL-friendly defaults (for example `wslview` as `BROWSER` when available).
 - Docker: `scripts/install-docker-desktop.sh` and `scripts/install-docker-engine.sh` both **detect WSL and exit without installing** Linux Docker packages. Use **Docker Desktop for Windows** with the WSL2 integration and distro enabled.
 - GitKraken: `packages/profiles/wsl/install-packages.sh` installs the official Linux `.deb` inside WSL. Requires WSLg (Windows 10 build 19044+ or Windows 11) for the GUI.
+- SSH agent: `keychain` and `openssh-client` from `packages/profiles/wsl/apt.txt`. Shell init starts the agent; `ssh-add <key>` adds the key and records it in local-only `~/.config/ssh/keychain-keys` for reload after reboot. A symlink at `~/.ssh/agent.sock` points at `SSH_AUTH_SOCK` for dev container forwarding.
 
 ### `desktop`
 

@@ -17,7 +17,9 @@ Templates and scripts read `{{ .profile }}` (and optional template data) from `~
 
 Supported list files in each layer match `packages/devices/README.md` (`apt.txt`, `snap.txt`, and so on).
 
-**In this repo right now:** `packages/common/`, `packages/profiles/desktop/`, `packages/devices/PW0NL7YE/`, and `packages/devices/ewlqemyb.vm/` exist. There are no `packages/profiles/wsl/` or `packages/profiles/server/` directories yet; add them when you want profile-specific packages for those machines—the install script will use them automatically once the folder exists and `DOTFILES_PROFILE` matches.
+Optional `packages/profiles/<profile>/install-packages.sh` runs after apt installs for packages not available from standard repositories (for example vendor `.deb` files).
+
+**In this repo right now:** `packages/common/`, `packages/profiles/desktop/`, `packages/profiles/wsl/`, `packages/devices/PW0NL7YE/`, and `packages/devices/ewlqemyb.vm/` exist. There is no `packages/profiles/server/` directory yet; add it when you want profile-specific packages for servers—the install script will use it automatically once the folder exists and `DOTFILES_PROFILE` matches.
 
 ## Profiles
 
@@ -27,6 +29,7 @@ Use when Ubuntu runs under WSL2 and you treat it as a dev shell with Windows pro
 
 - Shell: `dot_zshrc.tmpl` enables WSL-friendly defaults (for example `wslview` as `BROWSER` when available).
 - Docker: `scripts/install-docker-desktop.sh` and `scripts/install-docker-engine.sh` both **detect WSL and exit without installing** Linux Docker packages. Use **Docker Desktop for Windows** with the WSL2 integration and distro enabled.
+- GitKraken: `packages/profiles/wsl/install-packages.sh` installs the official Linux `.deb` inside WSL. Requires WSLg (Windows 10 build 19044+ or Windows 11) for the GUI.
 
 ### `desktop`
 

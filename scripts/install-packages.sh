@@ -89,12 +89,29 @@ install_apt_packages() {
   sudo apt-get install -y "${missing[@]}"
 }
 
+run_profile_package_extras() {
+  if [[ -z "$PROFILE" ]]; then
+    return 0
+  fi
+
+  local script="$PACKAGES_DIR/profiles/$PROFILE/install-packages.sh"
+
+  if [[ ! -f "$script" ]]; then
+    return 0
+  fi
+
+  echo "Running profile package extras: $script"
+  bash "$script"
+}
+
 echo "Installing packages from layered package lists"
 echo "Profile: ${PROFILE:-none}"
 echo "Hostname: ${HOSTNAME_VALUE:-none}"
 echo
 
 install_apt_packages
+
+run_profile_package_extras
 
 echo
 echo "Package installation complete."

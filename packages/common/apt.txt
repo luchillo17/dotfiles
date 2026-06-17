@@ -5,5 +5,6 @@ gh
 git
 gnupg
 rsync
+shfmt
 tmux
 zsh

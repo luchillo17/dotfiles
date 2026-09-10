@@ -4,12 +4,12 @@ set -euo pipefail
 export PATH="$HOME/.local/bin:$PATH"
 
 if ! command -v mise >/dev/null 2>&1; then
-  echo "mise not installed; skipping corepack enable."
+  echo "mise not installed; skipping corepack disable."
   exit 0
 fi
 
 if ! mise which node >/dev/null 2>&1; then
-  echo "Node not installed via mise; skipping corepack enable."
+  echo "Node not installed via mise; skipping corepack disable."
   exit 0
 fi
 
@@ -21,6 +21,5 @@ if [[ ! -e "$NODE_ROOT/bin/corepack" ]]; then
 fi
 
 export PATH="$NODE_ROOT/bin:$PATH"
-corepack enable
-corepack prepare pnpm@latest --activate
-echo "corepack enabled for $(node --version) with default pnpm $(pnpm --version)"
+corepack disable
+echo "corepack disabled for $(node --version); pnpm comes from mise, not Corepack."

@@ -62,6 +62,8 @@ gitName = "Your Name"
 gitEmail = "you@example.com"
 ```
 
+mise installs `pnpm` `latest`. Optional `[data] pnpm = "12.3.4"` (or another exact version) pins that machine when a project requires it.
+
 **Example — VPS**
 
 ```toml

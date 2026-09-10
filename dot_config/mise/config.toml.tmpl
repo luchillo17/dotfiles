@@ -1,0 +1,16 @@
+[settings]
+experimental = true
+idiomatic_version_file_enable_tools = ["node", "python", "go", "rust", "bun"]
+
+# Corepack ships pnpm/yarn shims in the Node bin dir. pnpm 12 is a native
+# binary from mise (aqua:pnpm/pnpm), not Corepack.
+[settings.node]
+corepack = false
+
+[tools]
+node = "lts"
+{{- $pnpm := "latest" -}}
+{{- if hasKey . "pnpm" -}}
+{{- $pnpm = .pnpm -}}
+{{- end }}
+pnpm = "{{ $pnpm }}"
